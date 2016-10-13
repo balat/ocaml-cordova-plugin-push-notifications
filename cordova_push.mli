@@ -1,6 +1,9 @@
 (* ----------------------------------------------------- *)
 (* ---------- Option to get a registration ID ---------- *)
 
+(** This module define functions and types for options needed by the {!init}
+    function.
+ *)
 module Init_options : sig
 
   module Android : sig
