@@ -89,29 +89,58 @@ module Additional_data : sig
   [@@@js.start]
 
   [@@@js.implem
-    let get t attr            = Ojs.get t attr
+    let get data key              = Ojs.get data key
 
-    let get_string data attr  = Ojs.string_of_js (get data attr)
+    let get_opt data key          = Ojs.option_of_js (fun x -> x) data
 
-    let get_int data attr     = Ojs.int_of_js (get data attr)
+    let get_string data key       = Ojs.string_of_js (get data key)
 
-    let get_float data attr   = Ojs.float_of_js (get data attr)
+    let get_string_opt data key   =
+      Ojs.option_of_js Ojs.string_of_js (get data key)
 
-    let get_int64 data attr   = Int64.of_string (get_string data attr)
+    let get_int data key          = Ojs.int_of_js (get data key)
 
-    let get_bool data attr    = Ojs.bool_of_js (get data attr)
+    let get_int_opt data key      =
+      Ojs.option_of_js Ojs.int_of_js (get data key)
+
+    let get_bool data key         = Ojs.bool_of_js (get data key)
+
+    let get_bool_opt data key     =
+      Ojs.option_of_js Ojs.bool_of_js (get data key)
+
+    let get_int64 data key        = Int64.of_string (get_string data key)
+
+    let get_int64_opt data key    =
+      Ojs.option_of_js
+        (fun v -> Int64.of_string (Ojs.string_of_js v))
+        (get data key)
+
+    let get_float data key        = Ojs.float_of_js (get data key)
+
+    let get_float_opt data key    =
+      Ojs.option_of_js Ojs.float_of_js (get data key)
   ]
 end
 
 module Data_notification : sig
     type t
 
+    (** [message data_notif] returns the notification message. It the
+        notification has no message, the value is an empty string.
+        (for FCM, it corresponds the data.message in the sent notification)
+     *)
     val message         : t -> string
+
+    (** [title data_notif] returns the notification title. It the
+        notification has no title, the value is an empty string.
+        (for FCM, it corresponds the data.title in the sent notification)
+     *)
     val title           : t -> string
-    val count           : t -> string option (* FIXME: Sometimes null, why? *)
-    val sound           : t -> string option (* FIXME: Sometimes null, why? *)
-    val image           : t -> string option (* FIXME: Sometimes null, why? *)
-    val launch_args     : t -> string option (* FIXME: Sometimes null, why? *)
+
+    val count           : t -> string option
+    val sound           : t -> string option
+    val image           : t -> string option
+    val launch_args     : t -> string option
     val additional_data : t -> Additional_data.t
   end
 
